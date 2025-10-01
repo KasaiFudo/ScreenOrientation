@@ -1,3 +1,17 @@
+# ✅ Features Recap
+
+📱 Responsive portrait / landscape UI.
+
+🛠 Built-in update service prefab.
+
+⚡ Debounce for rapid orientation changes.
+
+🔄 Runtime detection of new components.
+
+🎥 Smooth animated transitions.
+
+🖥 Powerful editor tools for testing & setup.
+
 # 🔧 Installation (via UPM)
 
 You can install this package directly in Unity using the Unity Package Manager.
