@@ -1,0 +1,16 @@
+{
+    "name": "KasaiFudo.ScreenOrientation.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:178f366bbb855194bae3dde29a0b0b59"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

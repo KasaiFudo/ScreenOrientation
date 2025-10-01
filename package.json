@@ -1,0 +1,21 @@
+{
+  "name": "com.kasaifudo.screenorientation",
+  "version": "1.0.0",
+  "displayName": "Animated Screen Orienation",
+  "description": "Orientation System for Mobile and WebGL platforms to provide animated switches between orientations",
+  "unity": "2021.3",
+  "dependencies": {
+    "com.unity.textmeshpro": "2.0.0"
+  },
+  "author": {
+    "name": "KasaiFudo",
+    "url": "https://github.com/KasaiFudo"
+  },
+  "samples": [
+    {
+      "displayName": "Example orientation",
+      "description": "Scene with examples of Rect Transform, Layout Group and TMP texts orientations",
+      "path": "Samples~/ExampleOrientation"
+    }
+  ]
+}
