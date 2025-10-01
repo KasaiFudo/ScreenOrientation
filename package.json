@@ -1,7 +1,7 @@
 {
   "name": "com.kasaifudo.screenorientation",
   "version": "1.0.0",
-  "displayName": "Animated Screen Orienation",
+  "displayName": "Animated Screen Orientation",
   "description": "Orientation System for Mobile and WebGL platforms to provide animated switches between orientations",
   "unity": "2021.3",
   "dependencies": {
