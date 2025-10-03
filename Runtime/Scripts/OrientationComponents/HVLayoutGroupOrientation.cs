@@ -74,7 +74,7 @@ namespace KasaiFudo.ScreenOrientation
         {
             var data = (HVLayoutGroupStruct)GetTargetValues(orientation);
             
-            ApplyLayoutGroupValues(data.IsHorizontal, data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight, data.ControlChildSizeWidth, data.ControlChildSizeHeight);
+            ApplyLayoutGroupValues(data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight, data.ControlChildSizeWidth, data.ControlChildSizeHeight);
         }
         
 
@@ -86,6 +86,22 @@ namespace KasaiFudo.ScreenOrientation
         protected override object GetTargetValues(BasicScreenOrientation orientation)
         {
             return orientation == BasicScreenOrientation.Portrait ? _portraitData : _landscapeData;
+        }
+
+        protected override void OnStartAnimation(object startValues, object endValues)
+        {
+            var end = (HVLayoutGroupStruct)endValues;
+            
+            if (end.IsHorizontal && !(LayoutGroup is HorizontalLayoutGroup))
+            {
+                DestroyImmediate(LayoutGroup);
+                _layoutGroup = gameObject.AddComponent<HorizontalLayoutGroup>();
+            }
+            else if (!end.IsHorizontal && !(LayoutGroup is VerticalLayoutGroup))
+            {
+                DestroyImmediate(LayoutGroup);
+                _layoutGroup = gameObject.AddComponent<VerticalLayoutGroup>();
+            }
         }
 
         protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
@@ -108,7 +124,7 @@ namespace KasaiFudo.ScreenOrientation
             var controlChildSizeWidth = t < 0.5f ? start.ControlChildSizeWidth : end.ControlChildSizeWidth;
             var controlChildSizeHeight = t < 0.5f ? start.ControlChildSizeHeight : end.ControlChildSizeHeight;
 
-            ApplyLayoutGroupValues(end.IsHorizontal, newPadding, childAlignment, spacing, childForceExpandWidth, childForceExpandHeight, controlChildSizeWidth, controlChildSizeHeight);
+            ApplyLayoutGroupValues(newPadding, childAlignment, spacing, childForceExpandWidth, childForceExpandHeight, controlChildSizeWidth, controlChildSizeHeight);
         }
 
         private HVLayoutGroupStruct GetCurrentValues()
@@ -116,19 +132,8 @@ namespace KasaiFudo.ScreenOrientation
             return new HVLayoutGroupStruct(LayoutGroup);
         }
 
-        private void ApplyLayoutGroupValues(bool isHorizontal, RectOffset padding, TextAnchor childAlignment, float spacing, bool childForceExpandWidth, bool childForceExpandHeight, bool controlChildSizeWidth, bool controlChildSizeHeight)
+        private void ApplyLayoutGroupValues(RectOffset padding, TextAnchor childAlignment, float spacing, bool childForceExpandWidth, bool childForceExpandHeight, bool controlChildSizeWidth, bool controlChildSizeHeight)
         {
-            if (isHorizontal && !(LayoutGroup is HorizontalLayoutGroup))
-            {
-                DestroyImmediate(LayoutGroup);
-                _layoutGroup = gameObject.AddComponent<HorizontalLayoutGroup>();
-            }
-            else if (!isHorizontal && !(LayoutGroup is VerticalLayoutGroup))
-            {
-                DestroyImmediate(LayoutGroup);
-                _layoutGroup = gameObject.AddComponent<VerticalLayoutGroup>();
-            }
-            
             LayoutGroup.padding = new RectOffset(
                 padding.left,
                 padding.right,

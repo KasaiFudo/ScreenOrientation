@@ -57,9 +57,14 @@ namespace KasaiFudo.ScreenOrientation
 
         protected virtual void OnStartAnimation(object startValues, object endValues)
         {
-            throw new NotImplementedException("As default method is not implemented. If you want to use animations, " +
-                                              "please override ApplyInterpolatedValues method in your class or simply not use animations");
+            
         }
+        
+        protected virtual void OnEndAnimation(object startValues, object endValues)
+        {
+            
+        }
+        
         protected virtual void ApplyInterpolatedValues(object startValues, object endValues, float t)
         {
             throw new NotImplementedException("As default method is not implemented. If you want to use animations, " +
@@ -74,7 +79,7 @@ namespace KasaiFudo.ScreenOrientation
             
             yield return new WaitForSeconds(_animationData.DelayToAnimate);
 
-            //OnStartAnimation(startValues, endValues);
+            OnStartAnimation(startValues, endValues);
             
             while (elapsed < _animationData.TransitionDuration)
             {
@@ -86,6 +91,7 @@ namespace KasaiFudo.ScreenOrientation
                 yield return null;
             }
 
+            OnEndAnimation(startValues, endValues);
             _animateCoroutine = null;
         }
 

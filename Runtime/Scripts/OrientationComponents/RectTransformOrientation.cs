@@ -58,6 +58,8 @@ namespace KasaiFudo.ScreenOrientation
             RectTransform.anchorMin = data.AnchorMin;
             RectTransform.anchorMax = data.AnchorMax;
             RectTransform.sizeDelta = data.SizeDelta;
+            
+            Canvas.ForceUpdateCanvases();
         }
 
         protected override object GetCurrentValues(BasicScreenOrientation oldOrientation)
@@ -70,6 +72,11 @@ namespace KasaiFudo.ScreenOrientation
             return orientation == BasicScreenOrientation.Portrait ? _portraitData : _landscapeData;
         }
 
+        protected override void OnStartAnimation(object startValues, object endValues)
+        {
+            Canvas.ForceUpdateCanvases();
+        }
+
         protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
         {
             var start = (RectTransformStruct)startValues;
@@ -79,6 +86,11 @@ namespace KasaiFudo.ScreenOrientation
             RectTransform.anchorMin = Vector2.Lerp(start.AnchorMin, end.AnchorMin, t);
             RectTransform.anchorMax = Vector2.Lerp(start.AnchorMax, end.AnchorMax, t);
             RectTransform.sizeDelta = Vector2.Lerp(start.SizeDelta, end.SizeDelta, t);
+        }
+
+        protected override void OnEndAnimation(object startValues, object endValues)
+        {
+            Canvas.ForceUpdateCanvases();
         }
 
         private RectTransformStruct GetCurrentValues()
