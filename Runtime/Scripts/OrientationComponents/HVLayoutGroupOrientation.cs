@@ -10,6 +10,7 @@ namespace KasaiFudo.ScreenOrientation
         [Serializable]
         private struct HVLayoutGroupStruct
         {
+            [field: SerializeField] public bool IsHorizontal { get; private set; }
             [field: SerializeField] public RectOffset Padding { get; private set; }
             [field: SerializeField] public TextAnchor ChildAlignment { get; private set; }
             [field: SerializeField] public float Spacing { get; private set; }
@@ -18,6 +19,7 @@ namespace KasaiFudo.ScreenOrientation
 
             public HVLayoutGroupStruct(HorizontalOrVerticalLayoutGroup g)
             {
+                IsHorizontal = g is HorizontalLayoutGroup;
                 Padding = new RectOffset(g.padding.left, g.padding.right, g.padding.top, g.padding.bottom);
                 ChildAlignment = g.childAlignment;
                 Spacing = g.spacing;
@@ -51,11 +53,17 @@ namespace KasaiFudo.ScreenOrientation
             _landscapeData = GetCurrentValues();
         }
 
+        private void Reset()
+        {
+            RewriteLandscapeLayoutData();
+            RewritePortraitLayoutData();
+        }
+
         protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
         {
             var data = (HVLayoutGroupStruct)GetTargetValues(orientation);
             
-            ApplyLayoutGroupValues(data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight);
+            ApplyLayoutGroupValues(data.IsHorizontal, data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight);
         }
         
 
@@ -87,7 +95,7 @@ namespace KasaiFudo.ScreenOrientation
             var childForceExpandWidth = t < 0.5f ? start.ChildForceExpandWidth : end.ChildForceExpandWidth;
             var childForceExpandHeight = t < 0.5f ? start.ChildForceExpandHeight : end.ChildForceExpandHeight;
 
-            ApplyLayoutGroupValues(newPadding, childAlignment, spacing, childForceExpandWidth, childForceExpandHeight);
+            ApplyLayoutGroupValues(end.IsHorizontal, newPadding, childAlignment, spacing, childForceExpandWidth, childForceExpandHeight);
         }
 
         private HVLayoutGroupStruct GetCurrentValues()
@@ -95,8 +103,19 @@ namespace KasaiFudo.ScreenOrientation
             return new HVLayoutGroupStruct(LayoutGroup);
         }
 
-        private void ApplyLayoutGroupValues(RectOffset padding, TextAnchor childAlignment, float spacing, bool childForceExpandWidth, bool childForceExpandHeight)
+        private void ApplyLayoutGroupValues(bool isHorizontal, RectOffset padding, TextAnchor childAlignment, float spacing, bool childForceExpandWidth, bool childForceExpandHeight)
         {
+            if (isHorizontal && !(LayoutGroup is HorizontalLayoutGroup))
+            {
+                DestroyImmediate(LayoutGroup);
+                _layoutGroup = gameObject.AddComponent<HorizontalLayoutGroup>();
+            }
+            else if (!isHorizontal && !(LayoutGroup is VerticalLayoutGroup))
+            {
+                DestroyImmediate(LayoutGroup);
+                _layoutGroup = gameObject.AddComponent<VerticalLayoutGroup>();
+            }
+            
             LayoutGroup.padding = new RectOffset(
                 padding.left,
                 padding.right,
