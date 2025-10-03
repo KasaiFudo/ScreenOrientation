@@ -44,6 +44,14 @@ This will spawn the built-in prefab `OrientationUpdateService.prefab` to the sce
 
 It automatically loads the config and starts orientation updates.
 
+## Initialization
+
+You should initialize OrientationUpdateService from somwhere(bootstrap) in your project. Use:
+
+```chasrp
+OrientationUpdateService.Initialize();
+```
+
 ## Configuration
 
 The default OrientationConfig is already included in the package as default, of course. 
