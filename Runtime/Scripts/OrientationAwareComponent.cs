@@ -24,6 +24,12 @@ namespace KasaiFudo.ScreenOrientation
         {
             _animationData.DelayToAnimate = _animationData.DelayToAnimate == 0 ? animationDelay : _animationData.DelayToAnimate;
         }
+
+        private void OnEnable()
+        {
+            ChangeOrientationImmediate(ScreenOrientationObserver.CurrentOrientation);
+        }
+
         public void OnOrientationChanged(BasicScreenOrientation newOrientation, BasicScreenOrientation oldOrientation)
         {
             if (_animationData.IsAnimated && gameObject.activeInHierarchy)
