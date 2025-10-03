@@ -74,6 +74,7 @@ namespace KasaiFudo.ScreenOrientation
         {
             var data = (HVLayoutGroupStruct)GetTargetValues(orientation);
             
+            ChangeHVState(data.IsHorizontal);
             ApplyLayoutGroupValues(data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight, data.ControlChildSizeWidth, data.ControlChildSizeHeight);
         }
         
@@ -92,16 +93,7 @@ namespace KasaiFudo.ScreenOrientation
         {
             var end = (HVLayoutGroupStruct)endValues;
             
-            if (end.IsHorizontal && !(LayoutGroup is HorizontalLayoutGroup))
-            {
-                DestroyImmediate(LayoutGroup);
-                _layoutGroup = gameObject.AddComponent<HorizontalLayoutGroup>();
-            }
-            else if (!end.IsHorizontal && !(LayoutGroup is VerticalLayoutGroup))
-            {
-                DestroyImmediate(LayoutGroup);
-                _layoutGroup = gameObject.AddComponent<VerticalLayoutGroup>();
-            }
+            ChangeHVState(end.IsHorizontal);
         }
 
         protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
@@ -130,6 +122,20 @@ namespace KasaiFudo.ScreenOrientation
         private HVLayoutGroupStruct GetCurrentValues()
         {
             return new HVLayoutGroupStruct(LayoutGroup);
+        }
+
+        private void ChangeHVState(bool isHorizontal)
+        {
+            if (isHorizontal && !(LayoutGroup is HorizontalLayoutGroup))
+            {
+                DestroyImmediate(LayoutGroup);
+                _layoutGroup = gameObject.AddComponent<HorizontalLayoutGroup>();
+            }
+            else if (!isHorizontal && !(LayoutGroup is VerticalLayoutGroup))
+            {
+                DestroyImmediate(LayoutGroup);
+                _layoutGroup = gameObject.AddComponent<VerticalLayoutGroup>();
+            }
         }
 
         private void ApplyLayoutGroupValues(RectOffset padding, TextAnchor childAlignment, float spacing, bool childForceExpandWidth, bool childForceExpandHeight, bool controlChildSizeWidth, bool controlChildSizeHeight)
