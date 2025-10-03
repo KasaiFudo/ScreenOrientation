@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 namespace KasaiFudo.ScreenOrientation
 {
-    [RequireComponent(typeof(HorizontalOrVerticalLayoutGroup))]
     public class HVLayoutGroupOrientation : OrientationAwareComponent
     {
         [Serializable]
@@ -16,6 +15,8 @@ namespace KasaiFudo.ScreenOrientation
             [field: SerializeField] public float Spacing { get; private set; }
             [field: SerializeField] public bool ChildForceExpandWidth { get; private set; }
             [field: SerializeField] public bool ChildForceExpandHeight { get; private set; }
+            [field:SerializeField] public bool ControlChildSizeWidth { get; private set; }
+            [field:SerializeField] public bool ControlChildSizeHeight { get; private set; }
 
             public HVLayoutGroupStruct(HorizontalOrVerticalLayoutGroup g)
             {
@@ -25,6 +26,8 @@ namespace KasaiFudo.ScreenOrientation
                 Spacing = g.spacing;
                 ChildForceExpandWidth = g.childForceExpandWidth;
                 ChildForceExpandHeight = g.childForceExpandHeight;
+                ControlChildSizeHeight = g.childControlHeight;
+                ControlChildSizeWidth = g.childControlWidth;
             }
         }
 
@@ -59,11 +62,19 @@ namespace KasaiFudo.ScreenOrientation
             RewritePortraitLayoutData();
         }
 
+        private void OnValidate()
+        {
+            if (!gameObject.TryGetComponent(out HorizontalOrVerticalLayoutGroup g))
+            {
+                throw new Exception("LayoutGroup must be either HorizontalLayoutGroup or VerticalLayoutGroup");
+            }
+        }
+
         protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
         {
             var data = (HVLayoutGroupStruct)GetTargetValues(orientation);
             
-            ApplyLayoutGroupValues(data.IsHorizontal, data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight);
+            ApplyLayoutGroupValues(data.IsHorizontal, data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight, data.ControlChildSizeWidth, data.ControlChildSizeHeight);
         }
         
 
@@ -94,8 +105,10 @@ namespace KasaiFudo.ScreenOrientation
             var spacing = Mathf.Lerp(start.Spacing, end.Spacing, t);
             var childForceExpandWidth = t < 0.5f ? start.ChildForceExpandWidth : end.ChildForceExpandWidth;
             var childForceExpandHeight = t < 0.5f ? start.ChildForceExpandHeight : end.ChildForceExpandHeight;
+            var controlChildSizeWidth = t < 0.5f ? start.ControlChildSizeWidth : end.ControlChildSizeWidth;
+            var controlChildSizeHeight = t < 0.5f ? start.ControlChildSizeHeight : end.ControlChildSizeHeight;
 
-            ApplyLayoutGroupValues(end.IsHorizontal, newPadding, childAlignment, spacing, childForceExpandWidth, childForceExpandHeight);
+            ApplyLayoutGroupValues(end.IsHorizontal, newPadding, childAlignment, spacing, childForceExpandWidth, childForceExpandHeight, controlChildSizeWidth, controlChildSizeHeight);
         }
 
         private HVLayoutGroupStruct GetCurrentValues()
@@ -103,7 +116,7 @@ namespace KasaiFudo.ScreenOrientation
             return new HVLayoutGroupStruct(LayoutGroup);
         }
 
-        private void ApplyLayoutGroupValues(bool isHorizontal, RectOffset padding, TextAnchor childAlignment, float spacing, bool childForceExpandWidth, bool childForceExpandHeight)
+        private void ApplyLayoutGroupValues(bool isHorizontal, RectOffset padding, TextAnchor childAlignment, float spacing, bool childForceExpandWidth, bool childForceExpandHeight, bool controlChildSizeWidth, bool controlChildSizeHeight)
         {
             if (isHorizontal && !(LayoutGroup is HorizontalLayoutGroup))
             {
@@ -126,6 +139,8 @@ namespace KasaiFudo.ScreenOrientation
             LayoutGroup.spacing = spacing;
             LayoutGroup.childForceExpandWidth = childForceExpandWidth;
             LayoutGroup.childForceExpandHeight = childForceExpandHeight;
+            LayoutGroup.childControlWidth = controlChildSizeWidth;
+            LayoutGroup.childControlHeight = controlChildSizeHeight;
 
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)LayoutGroup.transform);
         }
