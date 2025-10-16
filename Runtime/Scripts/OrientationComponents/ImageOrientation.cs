@@ -21,6 +21,10 @@ namespace KasaiFudo.ScreenOrientation
                 return _image;
             }
         }
+        
+        public void SetPortraitSprite(Sprite portraitSprite) => _portraitSprite = portraitSprite;
+        
+        public void SetLandscapeSprite(Sprite landscapeSprite) => _landscapeSprite = landscapeSprite;
 
         protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
         {
