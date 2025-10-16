@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace KasaiFudo.ScreenOrientation
 {
-    public class TextOrientation : OrientationAwareComponent
+    public class TextOrientation : AnimateOrientationAwareComponent
     {
         [SerializeField] private float _portraitTextSize;
         [SerializeField] private float _landscapeTextSize;

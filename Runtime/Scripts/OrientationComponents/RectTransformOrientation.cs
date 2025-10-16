@@ -4,7 +4,7 @@ using UnityEngine;
 namespace KasaiFudo.ScreenOrientation
 {
     [RequireComponent(typeof(RectTransform))]
-    public class RectTransformOrientation : OrientationAwareComponent
+    public class RectTransformOrientation : AnimateOrientationAwareComponent
     {
         [Serializable]
         protected struct RectTransformStruct

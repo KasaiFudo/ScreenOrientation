@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace KasaiFudo.ScreenOrientation
 {
     [RequireComponent(typeof(LayoutElement))]
-    public class LayoutElementOrientation : OrientationAwareComponent
+    public class LayoutElementOrientation : AnimateOrientationAwareComponent
     {
         [Serializable]
         private class LayoutElementStruct

@@ -65,7 +65,9 @@ namespace KasaiFudo.ScreenOrientation
                     if (_knownListeners.Add(listener))
                     {
                         Debug.Log("[OrientationUpdateService]New listeners found");
-                        component.Initialize(_orientationConfig.AnimationDelayForAllComponents);
+                        if(component is AnimateOrientationAwareComponent animatedComponent)
+                            animatedComponent.Initialize(_orientationConfig.AnimationDelayForAllComponents);
+                        
                         hasNewListeners = true;
                     }
                 }

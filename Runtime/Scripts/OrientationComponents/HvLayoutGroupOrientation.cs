@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace KasaiFudo.ScreenOrientation
 {
-    public class HVLayoutGroupOrientation : OrientationAwareComponent
+    public class HvLayoutGroupOrientation : AnimateOrientationAwareComponent
     {
         [Serializable]
         private struct HVLayoutGroupStruct

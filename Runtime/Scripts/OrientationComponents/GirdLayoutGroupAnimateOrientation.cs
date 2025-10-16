@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace KasaiFudo.ScreenOrientation
 {
     [RequireComponent(typeof(GridLayoutGroup))]
-    public class GirdLayoutGroupOrientation : OrientationAwareComponent
+    public class GirdLayoutGroupAnimateOrientation : AnimateOrientationAwareComponent
     {
         [Serializable]
         private struct GridLayoutGroupStruct

@@ -14,7 +14,7 @@ namespace KasaiFudo.ScreenOrientation.Editor
         private Vector2 _scrollPosition;
     
 
-        private OrientationAwareComponent[] _cachedComponents;
+        private AnimateOrientationAwareComponent[] _cachedComponents;
         private float _lastUpdateTime;
         private const float UPDATE_INTERVAL = 0.5f;
 
@@ -107,7 +107,7 @@ namespace KasaiFudo.ScreenOrientation.Editor
             EditorGUILayout.Space();
         }
 
-        private void DrawComponentItem(OrientationAwareComponent component, WorkContext context)
+        private void DrawComponentItem(AnimateOrientationAwareComponent component, WorkContext context)
         {
             if (component == null) return;
 
@@ -207,7 +207,7 @@ namespace KasaiFudo.ScreenOrientation.Editor
             }
         }
 
-        private OrientationAwareComponent[] GetComponents(WorkContext context)
+        private AnimateOrientationAwareComponent[] GetComponents(WorkContext context)
         {
             if (_cachedComponents != null && Time.realtimeSinceStartup - _lastUpdateTime < UPDATE_INTERVAL)
             {
@@ -227,18 +227,18 @@ namespace KasaiFudo.ScreenOrientation.Editor
             return _cachedComponents;
         }
 
-        private OrientationAwareComponent[] GetPrefabComponents(WorkContext context)
+        private AnimateOrientationAwareComponent[] GetPrefabComponents(WorkContext context)
         {
             if (context.PrefabStage?.prefabContentsRoot == null)
-                return Array.Empty<OrientationAwareComponent>();
+                return Array.Empty<AnimateOrientationAwareComponent>();
 
             return context.PrefabStage.prefabContentsRoot
-                .GetComponentsInChildren<OrientationAwareComponent>(_includeInactive);
+                .GetComponentsInChildren<AnimateOrientationAwareComponent>(_includeInactive);
         }
 
-        private OrientationAwareComponent[] GetSceneComponents()
+        private AnimateOrientationAwareComponent[] GetSceneComponents()
         {
-            return Object.FindObjectsByType<OrientationAwareComponent>(
+            return Object.FindObjectsByType<AnimateOrientationAwareComponent>(
                 _includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude,
                 FindObjectsSortMode.None
             );
