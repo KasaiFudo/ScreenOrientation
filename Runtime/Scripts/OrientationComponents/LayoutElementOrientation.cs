@@ -5,10 +5,10 @@ using UnityEngine.UI;
 namespace KasaiFudo.ScreenOrientation
 {
     [RequireComponent(typeof(LayoutElement))]
-    public class LayoutElementOrientation : AnimateOrientationAwareComponent
+    public class LayoutElementOrientation : AnimatedOrientationAwareble<LayoutElementOrientation.LayoutElementStruct>
     {
         [Serializable]
-        private class LayoutElementStruct
+        public struct LayoutElementStruct
         {
             [field: SerializeField] public bool IgnoreLayout {get; private set;}
             [field: SerializeField] public float MinWidth { get; private set; }
@@ -17,17 +17,6 @@ namespace KasaiFudo.ScreenOrientation
             [field: SerializeField] public float PreferredHeight {get; private set;}
             [field: SerializeField] public float FlexibleWidth {get; private set;}
             [field: SerializeField] public float FlexibleHeight {get; private set;}
-
-            public LayoutElementStruct()
-            {
-                IgnoreLayout = false;
-                MinWidth = -1;
-                MinHeight = -1;
-                PreferredWidth = -1;
-                PreferredHeight = -1;
-                FlexibleWidth = -1;
-                FlexibleHeight = -1;
-            }
 
             public LayoutElementStruct(LayoutElement layoutElement)
             {
@@ -55,41 +44,9 @@ namespace KasaiFudo.ScreenOrientation
                 return _layoutElement;
             }
         }
-        
-        [ContextMenu("Rewrite Portrait Layout Data")]
-        public void RewritePortraitLayoutData()
-        {
-            _portraitData = GetCurrentValues();
-        }
 
-        [ContextMenu("Rewrite Landscape Layout Data")]
-        public void RewriteLandscapeLayoutData()
+        protected override void ApplyInterpolated(LayoutElementStruct start, LayoutElementStruct end, float t)
         {
-            _landscapeData = GetCurrentValues();
-        }
-
-        protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
-        {
-            var data = (LayoutElementStruct)GetTargetValues(orientation);
-            
-            ApplyLayoutGroupValues(data.IgnoreLayout, data.MinWidth, data.MinHeight, data.PreferredWidth, data.PreferredHeight, data.FlexibleWidth, data.FlexibleHeight);
-        }
-
-        protected override object GetCurrentValues(BasicScreenOrientation oldOrientation)
-        {
-            return GetTargetValues(oldOrientation);
-        }
-
-        protected override object GetTargetValues(BasicScreenOrientation orientation)
-        {
-            return orientation == BasicScreenOrientation.Portrait ? _portraitData : _landscapeData;
-        }
-
-        protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
-        {
-            var start = (LayoutElementStruct)startValues;
-            var end = (LayoutElementStruct)endValues;
-            
             var interpolatedIgnoreLayout = Mathf.Lerp(start.IgnoreLayout ? 1f : 0f, end.IgnoreLayout ? 1f : 0f, t) > 0.5f;
             var interpolatedMinWidth = Mathf.Lerp(start.MinWidth, end.MinWidth, t);
             var interpolatedMinHeight = Mathf.Lerp(start.MinHeight, end.MinHeight, t);
@@ -102,13 +59,13 @@ namespace KasaiFudo.ScreenOrientation
                 interpolatedPreferredWidth, interpolatedPreferredHeight, interpolatedFlexibleWidth, interpolatedFlexibleHeight);
         }
 
-        private void Reset()
+        protected override void ApplyImmediate(LayoutElementStruct data)
         {
-            _portraitData = new LayoutElementStruct();
-            _landscapeData = new LayoutElementStruct();
+            ApplyLayoutGroupValues(data.IgnoreLayout, data.MinWidth, data.MinHeight, data.PreferredWidth, data.PreferredHeight,
+                data.FlexibleWidth, data.FlexibleHeight);
         }
 
-        private LayoutElementStruct GetCurrentValues()
+        protected override LayoutElementStruct GetCurrentValues()
         {
             return new LayoutElementStruct(LayoutElement);
         }
@@ -124,6 +81,12 @@ namespace KasaiFudo.ScreenOrientation
             LayoutElement.flexibleHeight = flexibleHeight;
             
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)LayoutElement.transform);
+        }
+        
+        private void OnValidate()
+        {
+            _portrait = _portraitData;
+            _landscape = _landscapeData;
         }
     }
 }

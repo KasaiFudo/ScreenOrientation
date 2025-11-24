@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 namespace KasaiFudo.ScreenOrientation
 {
-    public class HvLayoutGroupOrientation : AnimateOrientationAwareComponent
+    public class HvLayoutGroupOrientation : AnimatedOrientationAwareble<HvLayoutGroupOrientation.HVLayoutGroupStruct>
     {
         [Serializable]
-        private struct HVLayoutGroupStruct
+        public struct HVLayoutGroupStruct
         {
             [field: SerializeField] public bool IsHorizontal { get; private set; }
             [field: SerializeField] public RectOffset Padding { get; private set; }
@@ -44,63 +44,19 @@ namespace KasaiFudo.ScreenOrientation
             }
         }
 
-        [ContextMenu("Rewrite Portrait Layout Data")]
-        public void RewritePortraitLayoutData()
-        {
-            _portraitData = GetCurrentValues();
-        }
-
-        [ContextMenu("Rewrite Landscape Layout Data")]
-        public void RewriteLandscapeLayoutData()
-        {
-            _landscapeData = GetCurrentValues();
-        }
-
-        private void Reset()
-        {
-            RewriteLandscapeLayoutData();
-            RewritePortraitLayoutData();
-        }
-
         private void OnValidate()
         {
             if (!gameObject.TryGetComponent(out HorizontalOrVerticalLayoutGroup g))
             {
                 throw new Exception("LayoutGroup must be either HorizontalLayoutGroup or VerticalLayoutGroup");
             }
-        }
-
-        protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
-        {
-            var data = (HVLayoutGroupStruct)GetTargetValues(orientation);
             
-            ChangeHVState(data.IsHorizontal);
-            ApplyLayoutGroupValues(data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight, data.ControlChildSizeWidth, data.ControlChildSizeHeight);
-        }
-        
-
-        protected override object GetCurrentValues(BasicScreenOrientation oldOrientation)
-        {
-            return GetTargetValues(oldOrientation);
+            _portrait = _portraitData;
+            _landscape = _landscapeData;
         }
 
-        protected override object GetTargetValues(BasicScreenOrientation orientation)
+        protected override void ApplyInterpolated(HVLayoutGroupStruct start, HVLayoutGroupStruct end, float t)
         {
-            return orientation == BasicScreenOrientation.Portrait ? _portraitData : _landscapeData;
-        }
-
-        protected override void OnStartAnimation(object startValues, object endValues)
-        {
-            var end = (HVLayoutGroupStruct)endValues;
-            
-            ChangeHVState(end.IsHorizontal);
-        }
-
-        protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
-        {
-            var start = (HVLayoutGroupStruct)startValues;
-            var end = (HVLayoutGroupStruct)endValues;
-
             var newPadding = new RectOffset
             (
                 Mathf.RoundToInt(Mathf.Lerp(start.Padding.left, end.Padding.left, t)),
@@ -117,9 +73,15 @@ namespace KasaiFudo.ScreenOrientation
             var controlChildSizeHeight = t < 0.5f ? start.ControlChildSizeHeight : end.ControlChildSizeHeight;
 
             ApplyLayoutGroupValues(newPadding, childAlignment, spacing, childForceExpandWidth, childForceExpandHeight, controlChildSizeWidth, controlChildSizeHeight);
+
         }
 
-        private HVLayoutGroupStruct GetCurrentValues()
+        protected override void OnStartAnimation(HVLayoutGroupStruct startValues, HVLayoutGroupStruct endValues)
+        {
+            ChangeHVState(endValues.IsHorizontal);
+        }
+
+        protected override HVLayoutGroupStruct GetCurrentValues()
         {
             return new HVLayoutGroupStruct(LayoutGroup);
         }
@@ -155,5 +117,12 @@ namespace KasaiFudo.ScreenOrientation
 
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)LayoutGroup.transform);
         }
+
+        protected override void ApplyImmediate(HVLayoutGroupStruct data)
+        {
+            ChangeHVState(data.IsHorizontal);
+            ApplyLayoutGroupValues(data.Padding, data.ChildAlignment, data.Spacing, data.ChildForceExpandWidth, data.ChildForceExpandHeight, data.ControlChildSizeWidth, data.ControlChildSizeHeight);
+        }
+
     }
 }

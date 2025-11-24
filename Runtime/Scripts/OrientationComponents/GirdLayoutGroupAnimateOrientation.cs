@@ -5,10 +5,10 @@ using UnityEngine.UI;
 namespace KasaiFudo.ScreenOrientation
 {
     [RequireComponent(typeof(GridLayoutGroup))]
-    public class GirdLayoutGroupAnimateOrientation : AnimateOrientationAwareComponent
+    public class GirdLayoutGroupAnimatedOrientation : AnimatedOrientationAwareble<GirdLayoutGroupAnimatedOrientation.GridLayoutGroupStruct>
     {
         [Serializable]
-        private struct GridLayoutGroupStruct
+        public struct GridLayoutGroupStruct
         {
             [field: SerializeField] public Vector2 CellSize { get; private set; }
             [field: SerializeField] public Vector2 Spacing { get; private set; }
@@ -42,54 +42,9 @@ namespace KasaiFudo.ScreenOrientation
                 return _layoutGroup;
             }
         }
-        
-        [ContextMenu("Rewrite Portrait Layout Data")]
-        public void RewritePortraitLayoutData()
-        {
-            _portraitData = GetCurrentValues();
-        }
 
-        [ContextMenu("Rewrite Landscape Layout Data")]
-        public void RewriteLandscapeLayoutData()
+        protected override void ApplyInterpolated(GridLayoutGroupStruct start, GridLayoutGroupStruct end, float t)
         {
-            _landscapeData = GetCurrentValues();
-        }
-
-        private void Reset()
-        {
-            RewriteLandscapeLayoutData();
-            RewritePortraitLayoutData();
-        }
-
-        private void OnValidate()
-        {
-            if (!gameObject.TryGetComponent(out GridLayoutGroup g))
-            {
-                throw new Exception("LayoutGroup must be a GridLayoutGroup");
-            }
-        }
-
-        protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
-        {
-            var data = (GridLayoutGroupStruct)GetTargetValues(orientation);
-            ApplyLayoutGroupValues(data.Padding, data.CellSize, data.Spacing, data.Constraint, data.ConstraintCount, data.StartCorner, data.StartAxis);
-        }
-
-        protected override object GetCurrentValues(BasicScreenOrientation oldOrientation)
-        {
-            return GetTargetValues(oldOrientation);
-        }
-
-        protected override object GetTargetValues(BasicScreenOrientation orientation)
-        {
-            return orientation == BasicScreenOrientation.Portrait ? _portraitData : _landscapeData;
-        }
-
-        protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
-        {
-            var start = (GridLayoutGroupStruct)startValues;
-            var end = (GridLayoutGroupStruct)endValues;
-
             var newPadding = new RectOffset(
                 Mathf.RoundToInt(Mathf.Lerp(start.Padding.left, end.Padding.left, t)),
                 Mathf.RoundToInt(Mathf.Lerp(start.Padding.right, end.Padding.right, t)),
@@ -107,7 +62,7 @@ namespace KasaiFudo.ScreenOrientation
             ApplyLayoutGroupValues(newPadding, newCellSize, newSpacing, newConstraint, newConstraintCount, newStartCorner, newStartAxis);
         }
 
-        private GridLayoutGroupStruct GetCurrentValues()
+        protected override GridLayoutGroupStruct GetCurrentValues()
         {
             return new GridLayoutGroupStruct(LayoutGroup);
         }
@@ -128,6 +83,17 @@ namespace KasaiFudo.ScreenOrientation
             LayoutGroup.startAxis = startAxis;
 
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)LayoutGroup.transform);
+        }
+
+        protected override void ApplyImmediate(GridLayoutGroupStruct data)
+        {
+            ApplyLayoutGroupValues(data.Padding, data.CellSize, data.Spacing, data.Constraint, data.ConstraintCount, data.StartCorner, data.StartAxis);
+        }
+        
+        private void OnValidate()
+        {
+            _portrait = _portraitData;
+            _landscape = _landscapeData;
         }
     }
 }

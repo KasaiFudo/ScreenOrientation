@@ -1,15 +1,14 @@
 ﻿using System;
-using KasaiFudo.ScreenOrientation;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MainAssets.Scripts
+namespace KasaiFudo.ScreenOrientation
 {
     [RequireComponent(typeof(CanvasScaler))]
-    public class CanvasScalerOrientation : AnimateOrientationAwareComponent
+    public class CanvasScalerOrientation : AnimatedOrientationAwareble<CanvasScalerOrientation.CanvasScalerStruct>
     {
         [Serializable]
-        private class CanvasScalerStruct
+        public struct CanvasScalerStruct
         {
             [field: SerializeField] public CanvasScaler.ScaleMode UIScaleMode {get; private set;}
             [field: SerializeField] public Vector2 ReferenceResolution { get; private set; }
@@ -18,7 +17,7 @@ namespace MainAssets.Scripts
             [field: SerializeField, Range(0, 1)] public float MatchWidthOrHeight { get; private set; }
             [field: SerializeField] public float ReferencePixelPerUnit { get; private set; }
 
-            public CanvasScalerStruct()
+            /*public CanvasScalerStruct()
             {
                 UIScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 ReferenceResolution = new Vector2(1080, 1920);
@@ -26,7 +25,7 @@ namespace MainAssets.Scripts
                 ScreenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
                 MatchWidthOrHeight = 0.5f;
                 ReferencePixelPerUnit = 100; 
-            }
+            }*/
 
             public CanvasScalerStruct(CanvasScaler canvasScaler)
             {
@@ -53,56 +52,24 @@ namespace MainAssets.Scripts
                 return _canvasScaler;
             }
         }
-        
-        [ContextMenu("Rewrite Portrait Layout Data")]
-        public void RewritePortraitLayoutData()
-        {
-            _portraitData = GetCurrentValues();
-        }
 
-        [ContextMenu("Rewrite Landscape Layout Data")]
-        public void RewriteLandscapeLayoutData()
+        protected override void ApplyInterpolated(CanvasScalerStruct start, CanvasScalerStruct end, float t)
         {
-            _landscapeData = GetCurrentValues();
-        }
-
-        protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
-        {
-            var data = (CanvasScalerStruct)GetTargetValues(orientation);
-            
-            ApplyValues(data.UIScaleMode, data.ScreenMatchMode, data.MatchWidthOrHeight, data.ReferencePixelPerUnit);
-        }
-
-        protected override object GetCurrentValues(BasicScreenOrientation oldOrientation)
-        {
-            return GetTargetValues(oldOrientation);
-        }
-
-        protected override object GetTargetValues(BasicScreenOrientation orientation)
-        {
-            return orientation == BasicScreenOrientation.Portrait ? _portraitData : _landscapeData;
-        }
-
-        protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
-        {
-            var start = (CanvasScalerStruct)startValues;
-            var end = (CanvasScalerStruct)endValues;
-            
             var interpolatedUIScaleMode = end.UIScaleMode;
             var interpolatedScreenMatchMode = end.ScreenMatchMode;
             var interpolatedMatchWidthOrHeight = Mathf.Lerp(start.MatchWidthOrHeight, end.MatchWidthOrHeight, t);
             var interpolatedReferencePixelPerUnit = Mathf.Lerp(start.ReferencePixelPerUnit, end.ReferencePixelPerUnit, t);
             
             ApplyValues(interpolatedUIScaleMode, interpolatedScreenMatchMode, interpolatedMatchWidthOrHeight, interpolatedReferencePixelPerUnit);
+
         }
 
-        private void Reset()
+        protected override void ApplyImmediate(CanvasScalerStruct data)
         {
-            _portraitData = new CanvasScalerStruct();
-            _landscapeData = new CanvasScalerStruct();
+            ApplyValues(data.UIScaleMode, data.ScreenMatchMode, data.MatchWidthOrHeight, data.ReferencePixelPerUnit);
         }
 
-        private CanvasScalerStruct GetCurrentValues()
+        protected override CanvasScalerStruct GetCurrentValues()
         {
             return new CanvasScalerStruct(CanvasScaler);
         }
@@ -115,6 +82,12 @@ namespace MainAssets.Scripts
             CanvasScaler.referencePixelsPerUnit = dataReferencePixelPerUnit;
             
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)CanvasScaler.transform);
+        }
+        
+        private void OnValidate()
+        {
+            _portrait = _portraitData;
+            _landscape = _landscapeData;
         }
     }
 }

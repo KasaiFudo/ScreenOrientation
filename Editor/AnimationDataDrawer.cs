@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace KasaiFudo.ScreenOrientation.Editor
 {
-    [CustomPropertyDrawer(typeof(AnimateOrientationAwareComponent.AnimationData))]
+    [CustomPropertyDrawer(typeof(AnimationData))]
     public class AnimationDataDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        var isAnimated = property.FindPropertyRelative(nameof(AnimateOrientationAwareComponent.AnimationData.IsAnimated));
-        var overrideDelay = property.FindPropertyRelative(nameof(AnimateOrientationAwareComponent.AnimationData.OverrideDelayToAnimate));
+        var isAnimated = property.FindPropertyRelative(nameof(AnimationData.IsAnimated));
+        var overrideDelay = property.FindPropertyRelative(nameof(AnimationData.OverrideDelayToAnimate));
 
         bool isAnimEnabled = isAnimated?.boolValue ?? true;
         bool showDelay = isAnimEnabled && (overrideDelay?.boolValue ?? false);
@@ -29,11 +29,11 @@ namespace KasaiFudo.ScreenOrientation.Editor
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        var isAnimated = property.FindPropertyRelative(nameof(AnimateOrientationAwareComponent.AnimationData.IsAnimated));
-        var overrideDelay = property.FindPropertyRelative(nameof(AnimateOrientationAwareComponent.AnimationData.OverrideDelayToAnimate));
-        var delay = property.FindPropertyRelative(nameof(AnimateOrientationAwareComponent.AnimationData.DelayToAnimate));
-        var duration = property.FindPropertyRelative(nameof(AnimateOrientationAwareComponent.AnimationData.TransitionDuration));
-        var curve = property.FindPropertyRelative(nameof(AnimateOrientationAwareComponent.AnimationData.TransitionCurve));
+        var isAnimated = property.FindPropertyRelative(nameof(AnimationData.IsAnimated));
+        var overrideDelay = property.FindPropertyRelative(nameof(AnimationData.OverrideDelayToAnimate));
+        var delay = property.FindPropertyRelative(nameof(AnimationData.DelayToAnimate));
+        var duration = property.FindPropertyRelative(nameof(AnimationData.TransitionDuration));
+        var curve = property.FindPropertyRelative(nameof(AnimationData.TransitionCurve));
 
         float height = EditorGUIUtility.singleLineHeight;
         float space = EditorGUIUtility.standardVerticalSpacing;

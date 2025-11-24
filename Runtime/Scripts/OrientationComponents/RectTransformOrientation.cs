@@ -4,10 +4,10 @@ using UnityEngine;
 namespace KasaiFudo.ScreenOrientation
 {
     [RequireComponent(typeof(RectTransform))]
-    public class RectTransformOrientation : AnimateOrientationAwareComponent
+    public class RectTransformOrientation : AnimatedOrientationAwareble<RectTransformOrientation.RectTransformStruct>
     {
         [Serializable]
-        protected struct RectTransformStruct
+        public struct RectTransformStruct
         {
             [field: SerializeField]public Vector2 SizeDelta {get; private set; }
             [field: SerializeField]public Vector2 AnchoredPosition {get; private set; }
@@ -38,22 +38,13 @@ namespace KasaiFudo.ScreenOrientation
             }
         }
 
-        [ContextMenu("Rewrite Portrait Data")]
-        public void RewritePortraitData()
+        protected override void OnEndAnimation(RectTransformStruct startValues, RectTransformStruct endValues)
         {
-            _portraitData = GetCurrentValues();
+            Canvas.ForceUpdateCanvases();
         }
 
-        [ContextMenu("Rewrite Landscape Data")]
-        public void RewriteLandscapeData()
+        protected override void ApplyImmediate(RectTransformStruct data)
         {
-            _landscapeData = GetCurrentValues();
-        }
-
-        protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
-        {
-            var data = (RectTransformStruct)GetTargetValues(orientation);
-            
             RectTransform.anchoredPosition = data.AnchoredPosition;
             RectTransform.anchorMin = data.AnchorMin;
             RectTransform.anchorMax = data.AnchorMax;
@@ -62,40 +53,23 @@ namespace KasaiFudo.ScreenOrientation
             Canvas.ForceUpdateCanvases();
         }
 
-        protected override object GetCurrentValues(BasicScreenOrientation oldOrientation)
+        protected override RectTransformStruct GetCurrentValues()
         {
-            return GetTargetValues(oldOrientation);
+            return new RectTransformStruct(RectTransform);
         }
 
-        protected override object GetTargetValues(BasicScreenOrientation orientation)
+        protected override void ApplyInterpolated(RectTransformStruct start, RectTransformStruct end, float t)
         {
-            return orientation == BasicScreenOrientation.Portrait ? _portraitData : _landscapeData;
-        }
-
-        protected override void OnStartAnimation(object startValues, object endValues)
-        {
-            Canvas.ForceUpdateCanvases();
-        }
-
-        protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
-        {
-            var start = (RectTransformStruct)startValues;
-            var end = (RectTransformStruct)endValues;
-            
             RectTransform.anchoredPosition = Vector3.Lerp(start.AnchoredPosition, end.AnchoredPosition, t);
             RectTransform.anchorMin = Vector2.Lerp(start.AnchorMin, end.AnchorMin, t);
             RectTransform.anchorMax = Vector2.Lerp(start.AnchorMax, end.AnchorMax, t);
             RectTransform.sizeDelta = Vector2.Lerp(start.SizeDelta, end.SizeDelta, t);
         }
 
-        protected override void OnEndAnimation(object startValues, object endValues)
+        private void OnValidate()
         {
-            Canvas.ForceUpdateCanvases();
-        }
-
-        private RectTransformStruct GetCurrentValues()
-        {
-            return new RectTransformStruct(RectTransform);
+            _portrait = _portraitData;
+            _landscape = _landscapeData;
         }
     }
 }

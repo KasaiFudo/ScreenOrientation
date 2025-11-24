@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -55,17 +54,17 @@ namespace KasaiFudo.ScreenOrientation
 
         private static HashSet<IOrientationListener> InitializeListeners(out bool hasNewListeners)
         {
-            var components = FindObjectsByType<OrientationAwareComponent>(FindObjectsSortMode.None);
+            var components = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
             hasNewListeners = false;
         
-            foreach (var component in components)
+            foreach (var mono in components)
             {
-                if (component != null && component is IOrientationListener listener)
+                if (mono != null && mono is IOrientationListener listener)
                 {
                     if (_knownListeners.Add(listener))
                     {
                         Debug.Log("[OrientationUpdateService]New listeners found");
-                        if(component is AnimateOrientationAwareComponent animatedComponent)
+                        if(listener is IAnimatedOrientationListener animatedComponent)
                             animatedComponent.Initialize(_orientationConfig.AnimationDelayForAllComponents);
                         
                         hasNewListeners = true;

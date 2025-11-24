@@ -52,7 +52,7 @@ namespace KasaiFudo.ScreenOrientation
         {
             foreach (var orientationListener in _listeners)
             {
-                orientationListener.OnOrientationChanged(newOrientation, CurrentOrientation);
+                orientationListener.OnOrientationChanged(newOrientation);
             }
                 
             Debug.Log($"[ScreenOrientationObserver]Orientation changed from {CurrentOrientation} to {newOrientation}");

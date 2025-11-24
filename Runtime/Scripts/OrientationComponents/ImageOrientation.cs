@@ -1,11 +1,10 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace KasaiFudo.ScreenOrientation
 {
     [RequireComponent(typeof(Image))]
-    public class ImageOrientation : OrientationAwareComponent
+    public class ImageOrientation : OrientationAwareble<Sprite>
     {
         [SerializeField] private Sprite _portraitSprite;
         [SerializeField] private Sprite _landscapeSprite;
@@ -26,22 +25,23 @@ namespace KasaiFudo.ScreenOrientation
         { 
             _portraitSprite = portraitSprite;
             _landscapeSprite = landscapeSprite;
-            ChangeOrientationImmediate(ScreenOrientationObserver.CurrentOrientation);
+            ApplyImmediate(ScreenOrientationObserver.CurrentOrientation);
         }
 
-        protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
+        protected override void ApplyImmediate(Sprite data)
         {
-            Image.sprite = (Sprite)GetTargetValues(orientation);
+            _image.sprite = data;
         }
 
-        protected override object GetCurrentValues(BasicScreenOrientation oldOrientation)
+        protected override Sprite GetCurrentValues()
         {
-            return GetTargetValues(oldOrientation);
+            return Image.sprite;
         }
-
-        protected override object GetTargetValues(BasicScreenOrientation orientation)
+        
+        private void OnValidate()
         {
-            return orientation == BasicScreenOrientation.Portrait ? _portraitSprite : _landscapeSprite;
+            _portrait = _portraitSprite;
+            _landscape = _landscapeSprite;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -12,12 +13,13 @@ namespace KasaiFudo.ScreenOrientation.Editor
         private bool _includeInactive = true;
         private bool _showDebugInfo = false;
         private Vector2 _scrollPosition;
-    
 
-        private AnimateOrientationAwareComponent[] _cachedComponents;
+        private IOrientationListener[] _cachedComponents;
+        private Vector2 _lastGameViewSize;
         private float _lastUpdateTime;
         private const float UPDATE_INTERVAL = 0.5f;
 
+        
         [MenuItem("Tools/Orientation Testing/Open Orientation Test Window")]
         public static void ShowWindow()
         {
@@ -65,11 +67,6 @@ namespace KasaiFudo.ScreenOrientation.Editor
             }
             EditorGUILayout.EndHorizontal();
 
-            if (GUILayout.Button("Toggle Orientation (Ctrl+T)", GUILayout.Height(25)))
-            {
-                ToggleOrientation();
-            }
-
             EditorGUILayout.Space();
         }
 
@@ -107,23 +104,23 @@ namespace KasaiFudo.ScreenOrientation.Editor
             EditorGUILayout.Space();
         }
 
-        private void DrawComponentItem(AnimateOrientationAwareComponent component, WorkContext context)
+        private void DrawComponentItem(IOrientationListener component, WorkContext context)
         {
             if (component == null) return;
+            
+            var mono = component as MonoBehaviour;
 
             EditorGUILayout.BeginHorizontal();
         
-            var icon = component.gameObject.activeInHierarchy ? "✓" : "✗";
+            var icon = mono.gameObject.activeInHierarchy ? "✓" : "✗";
             EditorGUILayout.LabelField(icon, GUILayout.Width(20));
         
-            string displayName = context.IsPrefabMode ? 
-                GetPrefabPath(component.transform) : 
-                component.name;
+            string displayName = context.IsPrefabMode ? GetPrefabPath(mono.transform) : mono.name;
 
             if (GUILayout.Button(displayName, EditorStyles.linkLabel))
             {
-                Selection.activeGameObject = component.gameObject;
-                EditorGUIUtility.PingObject(component.gameObject);
+                Selection.activeGameObject = mono.gameObject;
+                EditorGUIUtility.PingObject(mono.gameObject);
             }
         
             EditorGUILayout.LabelField($"({component.GetType().Name})", EditorStyles.miniLabel);
@@ -142,14 +139,9 @@ namespace KasaiFudo.ScreenOrientation.Editor
                 var components = GetComponents(context);
                 if (components.Length > 0)
                 {
-                    Selection.objects = components.Select(c => c.gameObject).ToArray();
+                    Selection.objects = components.Select(c => (c as MonoBehaviour)?.gameObject).ToArray<Object>();
                 }
             }
-        
-            /*if (GUILayout.Button("Apply Game View Size"))
-        {
-            ApplyCurrentGameViewOrientation();
-        }*/
         
             EditorGUILayout.EndHorizontal();
         
@@ -207,7 +199,7 @@ namespace KasaiFudo.ScreenOrientation.Editor
             }
         }
 
-        private AnimateOrientationAwareComponent[] GetComponents(WorkContext context)
+        private IOrientationListener[] GetComponents(WorkContext context)
         {
             if (_cachedComponents != null && Time.realtimeSinceStartup - _lastUpdateTime < UPDATE_INTERVAL)
             {
@@ -227,21 +219,20 @@ namespace KasaiFudo.ScreenOrientation.Editor
             return _cachedComponents;
         }
 
-        private AnimateOrientationAwareComponent[] GetPrefabComponents(WorkContext context)
+        private IOrientationListener[] GetPrefabComponents(WorkContext context)
         {
             if (context.PrefabStage?.prefabContentsRoot == null)
-                return Array.Empty<AnimateOrientationAwareComponent>();
+                return Array.Empty<IOrientationListener>();
 
             return context.PrefabStage.prefabContentsRoot
-                .GetComponentsInChildren<AnimateOrientationAwareComponent>(_includeInactive);
+                .GetComponentsInChildren<IOrientationListener>(_includeInactive);
         }
 
-        private AnimateOrientationAwareComponent[] GetSceneComponents()
+        private IOrientationListener[] GetSceneComponents()
         {
-            return Object.FindObjectsByType<AnimateOrientationAwareComponent>(
-                _includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude,
-                FindObjectsSortMode.None
-            );
+            var obj = FindObjectsByType<MonoBehaviour>(_includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            
+            return obj.OfType<IOrientationListener>().ToArray();
         }
 
         private void ApplyOrientation(BasicScreenOrientation orientation)
@@ -258,23 +249,24 @@ namespace KasaiFudo.ScreenOrientation.Editor
                 return;
             }
         
-            Undo.RecordObjects(components.Select(c => c.transform).ToArray<Object>(), 
+            Undo.RecordObjects(components.Select(c => (c as MonoBehaviour)?.transform ).ToArray<Object>(), 
                 $"Apply {orientation} Orientation");
 
             foreach (var component in components)
             {
+                var mono = component as MonoBehaviour;
                 try
                 {
                     if(orientation == BasicScreenOrientation.Portrait)
                         component.ApplyPortraitData();
                     else
                         component.ApplyLandscapeData();
-                
-                    EditorUtility.SetDirty(component);
+                    
+                    EditorUtility.SetDirty(mono);
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
-                    Debug.LogError($"Error applying orientation to {GetFullPath(component.transform)}: {e.Message}");
+                    Debug.LogError($"Error applying orientation to {GetFullPath(mono?.transform)}: {e.Message}");
                 }
             }
 
@@ -288,22 +280,6 @@ namespace KasaiFudo.ScreenOrientation.Editor
             _cachedComponents = null;
             Repaint();
         }
-
-        private void ToggleOrientation()
-        {
-            var gameViewSize = GetGameViewSize();
-            var currentOrientation = gameViewSize.x > gameViewSize.y ? BasicScreenOrientation.Landscape : BasicScreenOrientation.Portrait;
-        
-            ApplyOrientation(currentOrientation);
-        }
-
-        /*private void ApplyCurrentGameViewOrientation()
-    {
-        var gameViewSize = GetGameViewSize();
-        var orientation = gameViewSize.x > gameViewSize.y ? BasicScreenOrientation.Landscape : BasicScreenOrientation.Portrait;
-        
-        ApplyOrientation(orientation);
-    }*/
 
         private void SavePrefabChanges()
         {
@@ -345,19 +321,21 @@ namespace KasaiFudo.ScreenOrientation.Editor
 
         private Vector2 GetGameViewSize()
         {
-            try
-            {
-                var gameViewType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.GameView");
-                var gameView = GetWindow(gameViewType, false, null, false);
-            
-                if (gameView != null)
-                {
-                    return new Vector2(gameView.position.width, gameView.position.height);
-                }
-            }
-            catch { }
-        
-            return new Vector2(1920, 1080);
+            var asm = typeof(UnityEditor.Editor).Assembly;
+
+            var gameViewType = asm.GetType("UnityEditor.GameView");
+            if (gameViewType == null)
+                return new Vector2(1920, 1080);
+
+            // Находим открытое окно GameView НЕ создавая его
+            var gameView = Resources.FindObjectsOfTypeAll(gameViewType)
+                .FirstOrDefault() as EditorWindow;
+
+            // Если GameView не открыт — возвращаем разумное значение
+            if (gameView == null)
+                return new Vector2(1920, 1080);
+
+            return new Vector2(gameView.position.width, gameView.position.height);
         }
     
         private void OnFocus()

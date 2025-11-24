@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace KasaiFudo.ScreenOrientation
 {
-    public class TextOrientation : AnimateOrientationAwareComponent
+    public class TextOrientation : AnimatedOrientationAwareble<float>
     {
         [SerializeField] private float _portraitTextSize;
         [SerializeField] private float _landscapeTextSize;
@@ -19,43 +19,26 @@ namespace KasaiFudo.ScreenOrientation
                 return _text;
             }
         }
-        
 
-        [ContextMenu("Rewrite Portrait Data")]
-        public void RewritePortraitSize()
+        protected override void ApplyImmediate(float data)
         {
-            _portraitTextSize = GetCurrentValues();
+            Text.fontSize = data;
         }
 
-        [ContextMenu("Rewrite Landscape Data")]
-        public void RewriteLandscapeSize()
-        {
-            _landscapeTextSize = GetCurrentValues();
-        }
-
-        protected override void ChangeOrientationImmediate(BasicScreenOrientation orientation)
-        {
-            Text.fontSize = (float)GetTargetValues(orientation);
-        }
-
-        protected override object GetCurrentValues(BasicScreenOrientation oldOrientation)
-        {
-            return GetTargetValues(oldOrientation);
-        }
-
-        protected override object GetTargetValues(BasicScreenOrientation orientation)
-        {
-            return orientation == BasicScreenOrientation.Portrait ? _portraitTextSize : _landscapeTextSize;
-        }
-
-        protected override void ApplyInterpolatedValues(object startValues, object endValues, float t)
-        {
-            Text.fontSize = Mathf.Lerp((float)startValues, (float)endValues, t);
-        }
-
-        private float GetCurrentValues()
+        protected override float GetCurrentValues()
         {
             return _text.fontSize;
+        }
+
+        protected override void ApplyInterpolated(float start, float end, float t)
+        {
+            Text.fontSize = Mathf.Lerp(start, end, t);
+        }
+        
+        private void OnValidate()
+        {
+            _portrait = _portraitTextSize;
+            _landscape = _landscapeTextSize;
         }
     }
 }
