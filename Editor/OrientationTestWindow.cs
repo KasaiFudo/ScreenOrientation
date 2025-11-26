@@ -13,6 +13,7 @@ namespace KasaiFudo.ScreenOrientation.Editor
         private bool _includeInactive = true;
         private bool _showDebugInfo = false;
         private Vector2 _scrollPosition;
+        private string _addKeyInput = "";
 
         private IOrientationListener[] _cachedComponents;
         private Vector2 _lastGameViewSize;
@@ -33,6 +34,7 @@ namespace KasaiFudo.ScreenOrientation.Editor
         
             DrawHeader(context);
             DrawMainButtons();
+            DrawAdditionKeyEditor();
             DrawSettings();
             DrawComponentsList(context);
             DrawAdditionalTools(context);
@@ -68,6 +70,47 @@ namespace KasaiFudo.ScreenOrientation.Editor
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space();
+        }
+        
+        private void DrawAdditionKeyEditor()
+        {
+            EditorGUILayout.LabelField("Addition Data Key", EditorStyles.boldLabel);
+
+            GUI.SetNextControlName("AdditionKeyTextField");
+            _addKeyInput = EditorGUILayout.TextField("New Key:", _addKeyInput);
+
+            var e = Event.current;
+            bool enter =
+                e.type == EventType.KeyUp &&
+                e.keyCode == KeyCode.Return &&
+                GUI.GetNameOfFocusedControl() == "AdditionKeyTextField";
+
+            EditorGUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Apply(Enter)") || enter)
+            {
+                ApplyAdditionKey();
+                GUI.FocusControl(null);
+
+                if (enter)
+                    Event.current.Use(); // <-- КРИТИЧНО: убираем двойную обработку
+            }
+
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space();
+        }
+        
+        private void ApplyAdditionKey()
+        {
+            if (!string.IsNullOrWhiteSpace(_addKeyInput))
+            {
+                AdditionDataKey.Key = _addKeyInput;
+                Debug.Log($"New AdditionDataKey set: {_addKeyInput}");
+            }
+            else
+            {
+                Debug.LogWarning("Key is empty — ignored");
+            }
         }
 
         private void DrawSettings()

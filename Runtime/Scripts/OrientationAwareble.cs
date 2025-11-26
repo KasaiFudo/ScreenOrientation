@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace KasaiFudo.ScreenOrientation
@@ -6,9 +7,19 @@ namespace KasaiFudo.ScreenOrientation
     {
         [SerializeField] protected TData _portrait;
         [SerializeField] protected TData _landscape;
+        [SerializeField] private AdditionDataConfig<TData> _additionDataConfig;
         private void OnEnable()
         {
+            if (_additionDataConfig != null)
+                AdditionDataKey.OnKeyChanged += UpdateByAdditionKey;
+            
             ApplyImmediate(ScreenOrientationObserver.CurrentOrientation);
+        }
+
+        private void OnDisable()
+        {
+            if (_additionDataConfig != null)
+                AdditionDataKey.OnKeyChanged -= UpdateByAdditionKey;
         }
 
         public virtual void OnOrientationChanged(BasicScreenOrientation newOrientation)
@@ -48,16 +59,22 @@ namespace KasaiFudo.ScreenOrientation
 
         protected virtual void ApplyImmediate(BasicScreenOrientation o)
         {
-            ApplyImmediate(o == BasicScreenOrientation.Portrait ? _portrait : _landscape);
+            var data = _additionDataConfig != null ? _additionDataConfig.GetOrientationData(o) :
+                o == BasicScreenOrientation.Portrait ? _portrait : _landscape;
+            
+            ApplyImmediate(data);
         }
 
         protected virtual TData GetValuesByOrientation(BasicScreenOrientation orientation)
         {
-            return orientation == BasicScreenOrientation.Landscape ? _landscape : _portrait;
+            return _additionDataConfig != null ? _additionDataConfig.GetOrientationData(orientation) :
+                orientation == BasicScreenOrientation.Landscape ? _landscape : _portrait;
         }
 
         protected abstract void ApplyImmediate(TData data);
         
         protected abstract TData GetCurrentValues();
+        
+        private void UpdateByAdditionKey() => ApplyImmediate(BasicScreenOrientation.Portrait);
     }
 }
