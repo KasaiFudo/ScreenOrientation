@@ -6,9 +6,6 @@ namespace KasaiFudo.ScreenOrientation
     [RequireComponent(typeof(Image))]
     public class ImageOrientation : OrientationAwareble<Sprite>
     {
-        [SerializeField] private Sprite _portraitSprite;
-        [SerializeField] private Sprite _landscapeSprite;
-        
         private Image _image;
         
         public Image Image
@@ -23,25 +20,19 @@ namespace KasaiFudo.ScreenOrientation
 
         public void SetSprites(Sprite portraitSprite, Sprite landscapeSprite)
         { 
-            _portraitSprite = portraitSprite;
-            _landscapeSprite = landscapeSprite;
+            _portrait = portraitSprite;
+            _landscape = landscapeSprite;
             ApplyImmediate(ScreenOrientationObserver.CurrentOrientation);
         }
 
         protected override void ApplyImmediate(Sprite data)
         {
-            _image.sprite = data;
+            Image.sprite = data;
         }
 
         protected override Sprite GetCurrentValues()
         {
             return Image.sprite;
-        }
-        
-        private void OnValidate()
-        {
-            _portrait = _portraitSprite;
-            _landscape = _landscapeSprite;
         }
     }
 }
