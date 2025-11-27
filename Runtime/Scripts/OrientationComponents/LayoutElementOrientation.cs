@@ -29,10 +29,6 @@ namespace KasaiFudo.ScreenOrientation
                 FlexibleHeight = layoutElement.flexibleHeight;
             }
         }
-        
-        [SerializeField] private LayoutElementStruct _portraitData;
-        [SerializeField] private LayoutElementStruct _landscapeData;
-
         private LayoutElement _layoutElement;
         
         public LayoutElement LayoutElement
@@ -81,12 +77,6 @@ namespace KasaiFudo.ScreenOrientation
             LayoutElement.flexibleHeight = flexibleHeight;
             
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)LayoutElement.transform);
-        }
-        
-        private void OnValidate()
-        {
-            _portrait = _portraitData;
-            _landscape = _landscapeData;
         }
     }
 }
