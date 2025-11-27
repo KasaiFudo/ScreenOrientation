@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IgnoreRapidChanges>k__BackingField: 1
   <RapidChangeThreshold>k__BackingField: 0.5
-  <DetectNewAwareComponentsInRuntime>k__BackingField: 0
+  <DetectNewAwareComponentsInRuntime>k__BackingField: 1
   <ListenerCheckInterval>k__BackingField: 1
-  <AnimationDelayForAllComponents>k__BackingField: 0.5

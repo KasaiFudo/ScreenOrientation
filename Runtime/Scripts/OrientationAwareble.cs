@@ -5,8 +5,8 @@ namespace KasaiFudo.ScreenOrientation
 {
     public abstract class OrientationAwareble<TData> : MonoBehaviour, IOrientationListener
     {
-        [SerializeField] private TData _portrait;
-        [SerializeField] private TData _landscape;
+        [SerializeField] protected TData _portrait;
+        [SerializeField] protected TData _landscape;
         [SerializeField] private AdditionDataConfig<TData> _additionDataConfig;
         private void OnEnable()
         {

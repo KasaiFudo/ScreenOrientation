@@ -17,6 +17,16 @@ namespace KasaiFudo.ScreenOrientation
             [field: SerializeField, Range(0, 1)] public float MatchWidthOrHeight { get; private set; }
             [field: SerializeField] public float ReferencePixelPerUnit { get; private set; }
 
+            /*public CanvasScalerStruct()
+            {
+                UIScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                ReferenceResolution = new Vector2(1080, 1920);
+                
+                ScreenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                MatchWidthOrHeight = 0.5f;
+                ReferencePixelPerUnit = 100; 
+            }*/
+
             public CanvasScalerStruct(CanvasScaler canvasScaler)
             {
                 UIScaleMode = canvasScaler.uiScaleMode;
@@ -27,6 +37,10 @@ namespace KasaiFudo.ScreenOrientation
                 ReferencePixelPerUnit = canvasScaler.referencePixelsPerUnit;
             }
         }
+        
+        [SerializeField] private CanvasScalerStruct _portraitData;
+        [SerializeField] private CanvasScalerStruct _landscapeData;
+
         private CanvasScaler _canvasScaler;
         
         public CanvasScaler CanvasScaler
@@ -68,6 +82,12 @@ namespace KasaiFudo.ScreenOrientation
             CanvasScaler.referencePixelsPerUnit = dataReferencePixelPerUnit;
             
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)CanvasScaler.transform);
+        }
+        
+        private void OnValidate()
+        {
+            _portrait = _portraitData;
+            _landscape = _landscapeData;
         }
     }
 }

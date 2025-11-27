@@ -29,8 +29,11 @@ namespace KasaiFudo.ScreenOrientation
                 Padding = new RectOffset(grid.padding.left, grid.padding.right, grid.padding.top, grid.padding.bottom);
             }
         }
-        private GridLayoutGroup _layoutGroup;
         
+        [SerializeField] private GridLayoutGroupStruct _portraitData;
+        [SerializeField] private GridLayoutGroupStruct _landscapeData;
+
+        private GridLayoutGroup _layoutGroup;
         public GridLayoutGroup LayoutGroup
         {
             get
@@ -85,6 +88,12 @@ namespace KasaiFudo.ScreenOrientation
         protected override void ApplyImmediate(GridLayoutGroupStruct data)
         {
             ApplyLayoutGroupValues(data.Padding, data.CellSize, data.Spacing, data.Constraint, data.ConstraintCount, data.StartCorner, data.StartAxis);
+        }
+        
+        private void OnValidate()
+        {
+            _portrait = _portraitData;
+            _landscape = _landscapeData;
         }
     }
 }

@@ -153,9 +153,9 @@ RectTransform:
   - {fileID: 955194471}
   m_Father: {fileID: 314664302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 133.6101, y: -321.0476}
   m_SizeDelta: {x: 218.4125, y: 160.6984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &48451465
@@ -410,9 +410,9 @@ RectTransform:
   - {fileID: 800690773}
   m_Father: {fileID: 314664302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 133.6101, y: -541.746}
   m_SizeDelta: {x: 218.4125, y: 160.6984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &153580917
@@ -769,7 +769,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 1524.8887}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &314664303
 MonoBehaviour:
@@ -797,36 +797,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 215725b80f8fb8b49aa286aae561fcdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portrait:
-    <IsHorizontal>k__BackingField: 0
-    <Padding>k__BackingField:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 20
-      m_Bottom: 20
-    <ChildAlignment>k__BackingField: 1
-    <Spacing>k__BackingField: 60
-    <ChildForceExpandWidth>k__BackingField: 1
-    <ChildForceExpandHeight>k__BackingField: 1
-    <ControlChildSizeWidth>k__BackingField: 0
-    <ControlChildSizeHeight>k__BackingField: 0
-  _landscape:
-    <IsHorizontal>k__BackingField: 1
-    <Padding>k__BackingField:
-      m_Left: 20
-      m_Right: 0
-      m_Top: 20
-      m_Bottom: 20
-    <ChildAlignment>k__BackingField: 1
-    <Spacing>k__BackingField: 30
-    <ChildForceExpandWidth>k__BackingField: 1
-    <ChildForceExpandHeight>k__BackingField: 1
-    <ControlChildSizeWidth>k__BackingField: 0
-    <ControlChildSizeHeight>k__BackingField: 0
-  _additionDataConfig: {fileID: 0}
   _animationData:
     IsAnimated: 1
-    OverrideDelayToAnimate: 0
     DelayToAnimate: 0
     TransitionDuration: 0.5
     TransitionCurve:
@@ -999,12 +971,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 362d492a97c1cbc4eb71a7b8d8a67cc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portrait: 36
-  _landscape: 56
-  _additionDataConfig: {fileID: 0}
   _animationData:
     IsAnimated: 1
-    OverrideDelayToAnimate: 0
     DelayToAnimate: 0
     TransitionDuration: 0.5
     TransitionCurve:
@@ -1718,9 +1686,9 @@ RectTransform:
   - {fileID: 359960993}
   m_Father: {fileID: 314664302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 133.6101, y: -762.4444}
   m_SizeDelta: {x: 218.4125, y: 160.6984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &782406304
@@ -1977,8 +1945,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 457.4701, y: 349}
-  m_SizeDelta: {x: 500.0726, y: 411.9984}
+  m_AnchoredPosition: {x: 391, y: 349}
+  m_SizeDelta: {x: 633.0129, y: 411.9984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &880132109
 MonoBehaviour:
@@ -1992,20 +1960,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f798eff6a84cbe488f6a15dd1ad272c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portrait:
-    <SizeDelta>k__BackingField: {x: 633.0129, y: 411.9984}
-    <AnchoredPosition>k__BackingField: {x: 391, y: 349}
-    <AnchorMin>k__BackingField: {x: 0, y: 0}
-    <AnchorMax>k__BackingField: {x: 0, y: 0}
-  _landscape:
-    <SizeDelta>k__BackingField: {x: 674.07104, y: 720.16}
-    <AnchoredPosition>k__BackingField: {x: -370.74622, y: 101.85}
-    <AnchorMin>k__BackingField: {x: 1, y: 0.5}
-    <AnchorMax>k__BackingField: {x: 1, y: 0.5}
-  _additionDataConfig: {fileID: 11400000, guid: 3867a337b5739914db8af25d4b2c0d7c, type: 2}
   _animationData:
     IsAnimated: 1
-    OverrideDelayToAnimate: 0
     DelayToAnimate: 0
     TransitionDuration: 0.5
     TransitionCurve:
@@ -2286,9 +2242,9 @@ RectTransform:
   - {fileID: 392944102}
   m_Father: {fileID: 314664302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 133.6101, y: -1424.5396}
   m_SizeDelta: {x: 218.4125, y: 160.6984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1154511736
@@ -2407,9 +2363,9 @@ RectTransform:
   - {fileID: 295835394}
   m_Father: {fileID: 314664302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 133.6101, y: -983.14276}
   m_SizeDelta: {x: 218.4125, y: 160.6984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1189874316
@@ -2528,9 +2484,9 @@ RectTransform:
   - {fileID: 1630230206}
   m_Father: {fileID: 314664302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 133.6101, y: -100.3492}
   m_SizeDelta: {x: 218.4125, y: 160.6984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1402284808
@@ -3039,12 +2995,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 362d492a97c1cbc4eb71a7b8d8a67cc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portrait: 36
-  _landscape: 56
-  _additionDataConfig: {fileID: 0}
   _animationData:
     IsAnimated: 1
-    OverrideDelayToAnimate: 0
     DelayToAnimate: 0
     TransitionDuration: 0.5
     TransitionCurve:
@@ -3242,9 +3194,9 @@ RectTransform:
   - {fileID: 105553968}
   m_Father: {fileID: 314664302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 133.6101, y: -1203.8412}
   m_SizeDelta: {x: 218.4125, y: 160.6984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1804213486
@@ -3381,20 +3333,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f798eff6a84cbe488f6a15dd1ad272c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portrait:
-    <SizeDelta>k__BackingField: {x: 267.2202, y: 1295.3777}
-    <AnchoredPosition>k__BackingField: {x: -178, y: -220.97401}
-    <AnchorMin>k__BackingField: {x: 1, y: 0.5}
-    <AnchorMax>k__BackingField: {x: 1, y: 0.5}
-  _landscape:
-    <SizeDelta>k__BackingField: {x: 1365.265, y: 228.965}
-    <AnchoredPosition>k__BackingField: {x: -727.0222, y: -397.1119}
-    <AnchorMin>k__BackingField: {x: 1, y: 0.5}
-    <AnchorMax>k__BackingField: {x: 1, y: 0.5}
-  _additionDataConfig: {fileID: 0}
   _animationData:
     IsAnimated: 1
-    OverrideDelayToAnimate: 0
     DelayToAnimate: 0
     TransitionDuration: 0.5
     TransitionCurve:
@@ -3586,20 +3526,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f798eff6a84cbe488f6a15dd1ad272c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portrait:
-    <SizeDelta>k__BackingField: {x: 605.7404, y: 374.80884}
-    <AnchoredPosition>k__BackingField: {x: 0, y: -263}
-    <AnchorMin>k__BackingField: {x: 0.5, y: 1}
-    <AnchorMax>k__BackingField: {x: 0.5, y: 1}
-  _landscape:
-    <SizeDelta>k__BackingField: {x: 709.803, y: 708.5139}
-    <AnchoredPosition>k__BackingField: {x: 492, y: 107.67255}
-    <AnchorMin>k__BackingField: {x: 0, y: 0.5}
-    <AnchorMax>k__BackingField: {x: 0, y: 0.5}
-  _additionDataConfig: {fileID: 0}
   _animationData:
     IsAnimated: 1
-    OverrideDelayToAnimate: 0
     DelayToAnimate: 0
     TransitionDuration: 0.5
     TransitionCurve:

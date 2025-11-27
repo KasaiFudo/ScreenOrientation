@@ -22,7 +22,7 @@ namespace KasaiFudo.ScreenOrientation
         }
 
         public void SetSprites(Sprite portraitSprite, Sprite landscapeSprite)
-        {
+        { 
             _portraitSprite = portraitSprite;
             _landscapeSprite = landscapeSprite;
             ApplyImmediate(ScreenOrientationObserver.CurrentOrientation);
@@ -30,12 +30,18 @@ namespace KasaiFudo.ScreenOrientation
 
         protected override void ApplyImmediate(Sprite data)
         {
-            Image.sprite = data;
+            _image.sprite = data;
         }
 
         protected override Sprite GetCurrentValues()
         {
             return Image.sprite;
+        }
+        
+        private void OnValidate()
+        {
+            _portrait = _portraitSprite;
+            _landscape = _landscapeSprite;
         }
     }
 }
