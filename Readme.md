@@ -12,6 +12,8 @@
 
 🖥 Powerful editor tools for testing & setup.
 
+https://github.com/user-attachments/assets/410da380-97e7-47f8-9be9-b2981a3fa79e
+
 # 🔧 Installation (via UPM)
 
 You can install this package directly in Unity using the Unity Package Manager.
