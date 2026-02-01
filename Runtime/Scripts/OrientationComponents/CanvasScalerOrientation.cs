@@ -37,9 +37,6 @@ namespace KasaiFudo.ScreenOrientation
                 ReferencePixelPerUnit = canvasScaler.referencePixelsPerUnit;
             }
         }
-        
-        [SerializeField] private CanvasScalerStruct _portraitData;
-        [SerializeField] private CanvasScalerStruct _landscapeData;
 
         private CanvasScaler _canvasScaler;
         
@@ -82,12 +79,6 @@ namespace KasaiFudo.ScreenOrientation
             CanvasScaler.referencePixelsPerUnit = dataReferencePixelPerUnit;
             
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)CanvasScaler.transform);
-        }
-        
-        private void OnValidate()
-        {
-            _portrait = _portraitData;
-            _landscape = _landscapeData;
         }
     }
 }

@@ -31,9 +31,6 @@ namespace KasaiFudo.ScreenOrientation
             }
         }
 
-        [SerializeField] private HVLayoutGroupStruct _portraitData;
-        [SerializeField] private HVLayoutGroupStruct _landscapeData;
-
         private HorizontalOrVerticalLayoutGroup _layoutGroup;
         public HorizontalOrVerticalLayoutGroup LayoutGroup
         {
@@ -50,9 +47,6 @@ namespace KasaiFudo.ScreenOrientation
             {
                 throw new Exception("LayoutGroup must be either HorizontalLayoutGroup or VerticalLayoutGroup");
             }
-            
-            _portrait = _portraitData;
-            _landscape = _landscapeData;
         }
 
         protected override void ApplyInterpolated(HVLayoutGroupStruct start, HVLayoutGroupStruct end, float t)

@@ -5,9 +5,6 @@ namespace KasaiFudo.ScreenOrientation
 {
     public class TextOrientation : AnimatedOrientationAwareble<float>
     {
-        [SerializeField] private float _portraitTextSize;
-        [SerializeField] private float _landscapeTextSize;
-        
         private TMP_Text _text;
         
         public TMP_Text Text
@@ -33,12 +30,6 @@ namespace KasaiFudo.ScreenOrientation
         protected override void ApplyInterpolated(float start, float end, float t)
         {
             Text.fontSize = Mathf.Lerp(start, end, t);
-        }
-        
-        private void OnValidate()
-        {
-            _portrait = _portraitTextSize;
-            _landscape = _landscapeTextSize;
         }
     }
 }

@@ -22,9 +22,6 @@ namespace KasaiFudo.ScreenOrientation
                 AnchorMax = rectTransform.anchorMax;
             }
         }
-
-        [SerializeField] private RectTransformStruct _portraitData;
-        [SerializeField] private RectTransformStruct _landscapeData;
         
         private RectTransform _rectTransform;
         
@@ -64,12 +61,6 @@ namespace KasaiFudo.ScreenOrientation
             RectTransform.anchorMin = Vector2.Lerp(start.AnchorMin, end.AnchorMin, t);
             RectTransform.anchorMax = Vector2.Lerp(start.AnchorMax, end.AnchorMax, t);
             RectTransform.sizeDelta = Vector2.Lerp(start.SizeDelta, end.SizeDelta, t);
-        }
-
-        private void OnValidate()
-        {
-            _portrait = _portraitData;
-            _landscape = _landscapeData;
         }
     }
 }
